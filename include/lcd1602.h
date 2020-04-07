@@ -21,12 +21,12 @@ typedef struct PortPin {
 } PortPin_t;
 
 
-void lcd1602_init(const PortPin_t *en, 
-                    const PortPin_t *rs, 
-                    const PortPin_t *d4, 
-                    const PortPin_t *d5, 
-                    const PortPin_t *d6, 
-                    const PortPin_t *d7);
+void lcd1602_init(PortPin_t en, 
+                    PortPin_t rs, 
+                    PortPin_t d4, 
+                    PortPin_t d5, 
+                    PortPin_t d6, 
+                    PortPin_t d7);
 
 void lcd1602_scrollLeft();
 void lcd1602_scrollRight();
