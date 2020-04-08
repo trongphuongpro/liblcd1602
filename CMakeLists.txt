@@ -8,7 +8,7 @@ if (SERIES STREQUAL ATMEGA)
 	add_library(${TARGET} STATIC src/lcd1602_atmega.c)
 
 elseif (SERIES STREQUAL TIVA)
-	add_library(${TARGET} STATIC src/lcd1602_tiva.c)
+	add_library(${TARGET} STATIC src/lcd1602_tiva.c lib/utils_tiva.c)
 
 else()
 	message(">> Failure due to missing SERIES.")

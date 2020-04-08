@@ -21,7 +21,6 @@ static void setEntryMode();
 static void writeData(uint8_t data);
 static void sendData(uint8_t data);
 static void sendInstruction(uint8_t data);
-static void delay_ms(uint16_t ms);
 
 void lcd1602_init(PortPin_t en__, 
                     PortPin_t rs__, 
@@ -38,8 +37,20 @@ void lcd1602_init(PortPin_t en__,
     dataPins[2] = d6__;
     dataPins[3] = d7__;
 
+    GPIOPinTypeGPIOOutput(en.base, en.pin);
+    GPIOPinWrite(en.base, en.pin, 0);
 
-    SysCtlDelay(5*SysCtlClockGet()/30); // Delay ~500ms
+    GPIOPinTypeGPIOOutput(rs.base, rs.pin);
+    GPIOPinWrite(rs.base, rs.pin, 0);
+
+
+    for (uint8_t i = 0; i < 4; i++) {
+        GPIOPinTypeGPIOOutput(dataPins[i].base, dataPins[i].pin);
+        GPIOPinWrite(dataPins[i].base, dataPins[i].pin, 0);
+    }
+
+    delay_init();
+    delay_ms(500); // Delay ~500ms
 
     awake();
     setFunction();
@@ -167,11 +178,6 @@ void lcd1602_scrollLeft() {
 
 void lcd1602_scrollRight() {
     sendInstruction(0x1C);
-}
-
-
-void delay_ms(uint16_t ms) {
-    SysCtlDelay(ms*SysCtlClockGet()/3000);
 }
 
 /************************ End of File ****************************************/ 

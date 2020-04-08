@@ -14,12 +14,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-
-typedef struct PortPin {
-    uint32_t base;
-    uint8_t pin;
-} PortPin_t;
-
+#include "utils.h"
 
 void lcd1602_init(PortPin_t en, 
                     PortPin_t rs, 
