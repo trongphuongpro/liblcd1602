@@ -18,7 +18,8 @@ static void awake();
 static void setFunction();
 static void controlDisplay();
 static void setEntryMode();
-static void writeData(uint8_t data);
+static void writeNibble(uint8_t nibble);
+static void writeByte(uint8_t data);
 static void sendData(uint8_t data);
 static void sendInstruction(uint8_t data);
 
@@ -62,8 +63,10 @@ void lcd1602_init(PortPin_t en__,
 
 
 void awake() {
+    GPIOPinWrite(rs.base, rs.pin, 0);
+
     for (int i = 0; i < 5; i++) {
-        writeData(0x00);
+        writeNibble(0x00);
     }
 }
 
@@ -103,8 +106,6 @@ void lcd1602_clear() {
 void lcd1602_setCursor(uint8_t row, uint8_t col) {
     uint8_t address = (col-1) + (row-1) * 64;
     sendInstruction(address | 0x80);
-
-    delay_ms(100); // Delay 100ms
 }
 
 
@@ -135,19 +136,9 @@ void lcd1602_print(const char *text, uint8_t row, uint8_t col, uint8_t width, ui
 }
 
 
-
-void writeData(uint8_t data) {
-    for (int i = 4; i < 8; i++) {
-        uint8_t bit = ((data >> i) & 1) ? dataPins[i-4].pin : 0;
-
-        GPIOPinWrite(dataPins[i-4].base, dataPins[i-4].pin, bit);
-    }
-
-    GPIOPinWrite(en.base, en.pin, en.pin);
-    GPIOPinWrite(en.base, en.pin, 0);
-
+void writeNibble(uint8_t nibble) {
     for (int i = 0; i < 4; i++) {
-        uint8_t bit = ((data >> i) & 1) ? dataPins[i].pin : 0;
+        uint8_t bit = ((nibble >> i) & 1) ? dataPins[i].pin : 0;
 
         GPIOPinWrite(dataPins[i].base, dataPins[i].pin, bit);
     }
@@ -157,17 +148,24 @@ void writeData(uint8_t data) {
 }
 
 
+
+void writeByte(uint8_t data) {
+    writeNibble(data >> 4);
+    writeNibble(data & 0x0F);
+}
+
+
 void sendData(uint8_t data) {
     GPIOPinWrite(rs.base, rs.pin, rs.pin);
-    writeData(data);
-    delay_ms(10); // Delay ~10ms
+    writeByte(data);
+    delay_ms(1); // Delay ~10ms
 }
 
 
 void sendInstruction(uint8_t data) {
     GPIOPinWrite(rs.base, rs.pin, 0);
-    writeData(data);
-    delay_ms(10); // Delay ~10ms  
+    writeByte(data);
+    delay_ms(1); // Delay ~10ms  
 }
 
 
