@@ -13,6 +13,7 @@
 
 volatile uint16_t counter = 0;
 
+static void systick_isr();
 
 void systick_isr() {
     if (counter > 0) {
