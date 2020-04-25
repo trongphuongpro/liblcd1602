@@ -4,8 +4,8 @@ set(TARGET lcd1602)
 
 #-----------------------------------------------------------------------------#
 
-if (SERIES STREQUAL ATMEGA)
-	add_library(${TARGET} STATIC src/lcd1602_atmega.c)
+if (SERIES STREQUAL AVR)
+	add_library(${TARGET} STATIC src/lcd1602_AVR.c)
 
 elseif (SERIES STREQUAL TIVA)
 	add_library(${TARGET} STATIC src/lcd1602_tiva.c lib/utils_tiva.c)
@@ -19,7 +19,7 @@ target_include_directories(${TARGET} PRIVATE include)
 
 #-----------------------------------------------------------------------------#
 
-if (SERIES STREQUAL ATMEGA)
+if (SERIES STREQUAL AVR)
 	target_compile_options(${TARGET} PUBLIC -mmcu=${MCU}
 											-std=gnu11
 											-O2
