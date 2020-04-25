@@ -14,7 +14,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "utils.h"
+#include "utils_tiva.h"
 
 void lcd1602_init(PortPin_t en, 
                     PortPin_t rs, 
